@@ -1,0 +1,5 @@
+{
+  "name": "Maitreyi",
+  "description": "An educational AI tool that solves Math, Physics, and Chemistry problems on a virtual blackboard using Google Gemini.",
+  "requestFramePermissions": []
+}
