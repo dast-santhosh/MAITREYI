@@ -74,41 +74,6 @@ As "Mam" speaks, the subtitles highlight word-by-word (or clause-by-clause), mim
 * **Styling:** CSS3 (Custom Blackboard Aesthetic)
 * **Speech:** Web Speech API / Custom TTS Integration
 
----
-
-## 💻 Installation & Setup
-
-Follow these steps to run Maitreyi locally on your machine.
-
-### Prerequisites
-* Node.js (v18 or higher)
-* npm or yarn
-* A Google Gemini API Key
-
-### Steps
-
-1.  **Clone the Repository**
-    ```bash
-    git clone [https://github.com/your-username/maitreyi-ai-teacher.git](https://github.com/your-username/maitreyi-ai-teacher.git)
-    cd maitreyi-ai-teacher
-    ```
-
-2.  **Install Dependencies**
-    ```bash
-    npm install
-    ```
-
-3.  **Environment Setup**
-    Create a `.env` file in the root directory and add your API key:
-    ```env
-    VITE_GEMINI_API_KEY=your_actual_google_api_key_here
-    ```
-
-4.  **Run the App**
-    ```bash
-    npm run dev
-    ```
-    Open your browser and navigate to `http://localhost:5173` (or the port shown in your terminal).
 
 ---
 
@@ -121,17 +86,6 @@ Follow these steps to run Maitreyi locally on your machine.
 
 ---
 
-## 🤝 Contributing
-
-Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-
-1.  Fork the Project
-2.  Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3.  Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4.  Push to the Branch (`git push origin feature/AmazingFeature`)
-5.  Open a Pull Request
-
----
 
 ## 📝 License
 
