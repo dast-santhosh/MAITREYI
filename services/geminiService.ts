@@ -3,28 +3,26 @@ import { LessonPlan, LessonStep } from "../types";
 
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
-// Helper to generate image for a specific step
+// Declare puter global to avoid TypeScript errors
+declare const puter: any;
+
+// Helper to generate image using Puter.ai
 const generateStepImage = async (prompt: string): Promise<string> => {
   try {
-    // We removed "photorealistic" to allow the model to request "hand-drawn chalk diagrams" if it wants.
-    const imagePrompt = `Educational illustration: ${prompt}. High quality, clear, suitable for a classroom context.`;
-    const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash-image',
-      contents: { parts: [{ text: imagePrompt }] },
-      config: { imageConfig: { aspectRatio: "4:3" } },
+    const enhancedPrompt = `${prompt}, educational, detailed, high quality, 4k, classroom visualization`;
+    
+    // Using Puter.ai with the specific model and provider requested
+    const imageElement = await puter.ai.txt2img(enhancedPrompt, { 
+        model: "google/gemini-3-pro-image", 
+        provider: "together-ai", 
+        disable_safety_checker: true
     });
-
-    if (response.candidates?.[0]?.content?.parts) {
-      for (const part of response.candidates[0].content.parts) {
-        if (part.inlineData && part.inlineData.data) {
-          return `data:${part.inlineData.mimeType || 'image/png'};base64,${part.inlineData.data}`;
-        }
-      }
-    }
-    return "";
+    
+    // puter.ai.txt2img returns an HTMLImageElement, we extract the src
+    return imageElement.src;
   } catch (e) {
-    console.error("Image gen failed", e);
-    return ""; // Fallback will result in empty board or error text handled by UI
+    console.error("Puter image gen failed", e);
+    return ""; 
   }
 };
 
@@ -124,7 +122,6 @@ export const solveOnBlackboard = async (prompt: string, language: string = 'Engl
     const text = response.text || "{}";
     let cleanText = text.replace(/```json/g, '').replace(/```/g, '').trim();
     
-    // Simple extraction if markdown wraps it
     const firstBrace = cleanText.indexOf('{');
     const lastBrace = cleanText.lastIndexOf('}');
     if (firstBrace !== -1 && lastBrace !== -1) {
@@ -144,8 +141,7 @@ export const solveOnBlackboard = async (prompt: string, language: string = 'Engl
        return { steps: [] };
     }
 
-    // 2. Post-Process: Generate Images for 'image' steps
-    // Process sequentially to avoid rate limits / network errors with multiple concurrent requests
+    // 2. Post-Process: Generate Images URLS for 'image' steps
     const processedSteps: LessonStep[] = [];
     
     for (const step of json.steps) {
@@ -155,7 +151,7 @@ export const solveOnBlackboard = async (prompt: string, language: string = 'Engl
             if (imageUrl) {
                 processedSteps.push({ ...step, board: imageUrl });
             } else {
-                processedSteps.push({ ...step, visualType: 'html', board: "<h1>[Image Unavailable]</h1><p>Visual could not be generated.</p>" });
+                processedSteps.push({ ...step, visualType: 'html', board: "<h1>[Image Unavailable]</h1>" });
             }
         } catch (err) {
             console.error("Step visual generation failed", err);
